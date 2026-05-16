@@ -7,26 +7,24 @@
 
   <style>
     :root {
-      --bg: #eef2ff;
-      --bg2: #fdf2f8;
-      --card: #ffffff;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
       --text: #111827;
       --muted: #6b7280;
+      --border: #e5e7eb;
 
       --primary: #4f46e5;
+      --primary-soft: #eef2ff;
       --primary-dark: #3730a3;
-      --accent: #ec4899;
 
-      --mint-soft: #ccfbf1;
-      --surface: #f8f7ff;
-      --surface-strong: #f1efff;
-      --surface-mint: #ecfdf5;
-      --surface-pink: #fdf2f8;
-      --border: #ddd6fe;
+      --success: #0f766e;
+      --success-soft: #ecfdf5;
 
-      --green: #0f766e;
-      --red: #b91c1c;
-      --orange: #f59e0b;
+      --danger: #b91c1c;
+      --danger-soft: #fef2f2;
+
+      --shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
     }
 
     * {
@@ -36,10 +34,7 @@
     body {
       margin: 0;
       font-family: system-ui, Arial, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(236,72,153,0.18), transparent 32%),
-        radial-gradient(circle at bottom left, rgba(20,184,166,0.18), transparent 30%),
-        linear-gradient(160deg, #eef2ff 0%, #f8f7ff 45%, #fdf2f8 100%);
+      background: var(--bg);
       color: var(--text);
       min-height: 100vh;
     }
@@ -48,40 +43,48 @@
       max-width: 760px;
       margin: 0 auto;
       padding: 16px;
-      padding-bottom: 110px;
+      padding-bottom: 98px;
     }
 
     header {
-      background:
-        linear-gradient(135deg, rgba(79,70,229,0.96), rgba(236,72,153,0.88));
-      color: white;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      border-radius: 0 0 22px 22px;
       padding: 22px 18px;
-      border-radius: 0 0 24px 24px;
       margin: 0 -16px 16px;
     }
 
     h1 {
       margin: 0 0 6px;
       font-size: 25px;
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: 24px;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-size: 19px;
     }
 
     .subtitle {
       margin: 0;
-      color: #e5e7eb;
+      color: var(--muted);
       font-size: 14px;
       line-height: 1.45;
     }
 
     .panel {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.88), rgba(248,247,255,0.96));
-      border: 1px solid rgba(124,58,237,0.16);
-      border-radius: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       padding: 16px;
       margin-bottom: 16px;
-      box-shadow:
-        0 10px 28px rgba(79,70,229,0.10),
-        inset 0 1px 0 rgba(255,255,255,0.75);
+      box-shadow: var(--shadow);
     }
 
     .top-row {
@@ -93,72 +96,79 @@
     }
 
     button {
-      border: 1px solid rgba(79,70,229,0.16);
+      border: 1px solid transparent;
       border-radius: 14px;
-      padding: 13px 14px;
-      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      padding: 12px 14px;
+      background: var(--primary);
       color: white;
       font-weight: 700;
       font-size: 15px;
       cursor: pointer;
-      box-shadow: 0 5px 14px rgba(79,70,229,0.14);
+      min-height: 44px;
     }
 
-    button.green {
-      background: linear-gradient(135deg, #14b8a6, #0f766e);
-      border-color: rgba(15,118,110,0.18);
+    button:active {
+      transform: translateY(1px);
     }
 
-    button.red {
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
-      border-color: rgba(185,28,28,0.18);
-    }
-
-    button.orange {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      color: white;
-      border-color: rgba(217,119,6,0.18);
-    }
-
-    button.light {
-      background: linear-gradient(135deg, #f8f7ff, #eef2ff);
+    button.secondary {
+      background: var(--primary-soft);
       color: var(--primary-dark);
-      border-color: rgba(79,70,229,0.18);
+      border-color: #dbe2ff;
+    }
+
+    button.success {
+      background: var(--success);
+      color: white;
+    }
+
+    button.danger {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: #fecaca;
+    }
+
+    button.ghost {
+      background: var(--surface-soft);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .hint,
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
     }
 
     .mode-box {
       margin-top: 14px;
       padding: 12px;
       border-radius: 16px;
-      background: linear-gradient(135deg, var(--surface-strong), var(--surface-pink));
-      border: 1px solid rgba(124,58,237,0.14);
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      box-shadow: 0 4px 14px rgba(79,70,229,0.08);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
     }
 
     .mode-buttons {
-      display: flex;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
-      flex-wrap: wrap;
+      margin-top: 10px;
     }
 
     .mode-btn {
-      background: linear-gradient(135deg, #ffffff, #eef2ff);
-      color: var(--primary-dark);
-      padding: 10px 12px;
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
       font-size: 14px;
-      border: 1px solid rgba(79,70,229,0.16);
-      box-shadow: none;
+      min-height: 48px;
     }
 
     .mode-btn.active {
-      background: linear-gradient(135deg, #818cf8, #4f46e5);
-      color: white;
-      box-shadow: 0 6px 16px rgba(79,70,229,0.18);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-color: #c7d2fe;
+      box-shadow: inset 0 0 0 1px #c7d2fe;
     }
 
     .learn-actions {
@@ -169,7 +179,6 @@
     }
 
     .learn-actions button {
-      padding: 10px 12px;
       font-size: 14px;
     }
 
@@ -182,44 +191,35 @@
 
     .word-item {
       display: grid;
-      grid-template-columns: 34px minmax(0, 1fr);
+      grid-template-columns: 30px minmax(0, 1fr);
       gap: 8px;
       align-items: start;
     }
 
     .word-number {
-      color: var(--primary-dark);
-      font-weight: 900;
-      font-size: 17px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 15px;
       text-align: center;
-      padding-top: 13px;
+      padding-top: 14px;
     }
 
     .word-card {
-      width: 92%;
-      max-width: 520px;
+      width: 100%;
       min-width: 0;
-      background: linear-gradient(135deg, var(--surface), #ffffff);
-      border: 1px solid rgba(124,58,237,0.16);
-      border-radius: 18px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 12px 14px;
-      box-shadow: 0 4px 14px rgba(79,70,229,0.10);
       overflow: hidden;
-    }
-
-    @media (max-width: 560px) {
-      .word-card {
-        width: 100%;
-      }
     }
 
     .prompt-word {
       font-size: 20px;
       font-weight: 800;
-      color: var(--primary);
+      color: var(--text);
       cursor: pointer;
       user-select: none;
-      direction: auto;
       max-width: 100%;
       white-space: normal;
       overflow-wrap: anywhere;
@@ -227,15 +227,20 @@
       line-height: 1.35;
     }
 
+    .tap-note {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
     .answer-word {
       display: none;
-      margin-top: 8px;
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
       font-size: 18px;
-      color: var(--green);
-      direction: auto;
+      color: var(--success);
       font-weight: 700;
-      padding-top: 8px;
-      border-top: 1px solid rgba(79,70,229,0.12);
       max-width: 100%;
       white-space: normal;
       overflow-wrap: anywhere;
@@ -250,30 +255,47 @@
     input {
       width: 100%;
       padding: 12px;
-      border: 1px solid rgba(124,58,237,0.18);
+      border: 1px solid var(--border);
       border-radius: 12px;
       font-size: 16px;
-      background: linear-gradient(135deg, #ffffff, var(--surface));
+      background: white;
       color: var(--text);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75);
+      min-width: 0;
     }
 
     input:focus {
-      outline: 2px solid rgba(79,70,229,0.18);
-      border-color: var(--primary);
+      outline: 3px solid rgba(79, 70, 229, 0.12);
+      border-color: #a5b4fc;
     }
 
     .card-title-input {
-      background: linear-gradient(135deg, var(--surface-pink), var(--surface-strong));
-      border: 2px solid rgba(79,70,229,0.22);
+      background: var(--primary-soft);
+      border-color: #c7d2fe;
       font-weight: 800;
       margin-bottom: 14px;
     }
 
+    .form-headings {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1fr);
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      direction: ltr;
+    }
+
+    .form-headings div {
+      direction: rtl;
+      text-align: center;
+    }
+
     .pair {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
-      gap: 7px;
+      grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1fr);
+      gap: 6px;
       margin-bottom: 10px;
       align-items: center;
       direction: ltr;
@@ -282,33 +304,30 @@
     .word-input-en {
       direction: ltr;
       text-align: left;
-      border-color: rgba(79,70,229,0.24);
-      background: linear-gradient(135deg, #ffffff, #eef2ff);
-      min-width: 0;
+      background: #ffffff;
     }
 
     .word-input-he {
       direction: rtl;
       text-align: right;
-      border-color: rgba(20,184,166,0.26);
-      background: linear-gradient(135deg, #ffffff, #ecfdf5);
-      min-width: 0;
+      background: #ffffff;
     }
 
     .pair-arrow {
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--accent);
+      color: var(--muted);
       font-weight: 900;
-      font-size: 18px;
+      font-size: 16px;
       user-select: none;
       line-height: 1;
     }
 
     @media (max-width: 560px) {
-      .pair {
-        grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+      .pair,
+      .form-headings {
+        grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr);
         gap: 5px;
       }
 
@@ -318,10 +337,8 @@
         border-radius: 11px;
       }
 
-      .pair-arrow {
-        font-size: 16px;
-        transform: none;
-        height: auto;
+      .mode-buttons {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -329,26 +346,19 @@
       display: none;
     }
 
-    .hint,
-    .small {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
     .status {
       margin-top: 10px;
       min-height: 24px;
       font-weight: 700;
+      color: var(--success);
     }
 
     .saved-card {
-      background: linear-gradient(135deg, var(--surface), #ffffff);
-      border: 1px solid rgba(124,58,237,0.16);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 12px;
       margin-top: 10px;
-      box-shadow: 0 4px 14px rgba(79,70,229,0.08);
     }
 
     .saved-card-title {
@@ -363,10 +373,14 @@
       margin-top: 10px;
     }
 
-    .edit-box {
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border);
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 18px;
+      line-height: 1.6;
+      background: var(--surface-soft);
+      border: 1px dashed var(--border);
+      border-radius: 16px;
     }
 
     .bottom-nav {
@@ -374,139 +388,106 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background:
-        linear-gradient(135deg, rgba(248,247,255,0.96), rgba(253,242,248,0.96));
-      border-top: 1px solid rgba(124,58,237,0.14);
+      background: rgba(255,255,255,0.96);
+      border-top: 1px solid var(--border);
       padding: 10px 12px 14px;
       display: grid;
-      grid-template-columns: 1fr 1.35fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
-      align-items: end;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 -8px 22px rgba(79,70,229,0.10);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 -6px 18px rgba(17, 24, 39, 0.06);
     }
 
     .bottom-nav button {
       width: 100%;
       min-height: 48px;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
-    }
-
-    .main-tab {
-      min-height: 62px !important;
-      font-size: 18px !important;
-      border-radius: 22px !important;
-      background: linear-gradient(135deg, #818cf8, var(--primary)) !important;
-      box-shadow: 0 8px 22px rgba(79,70,229,0.24);
-      transform: translateY(-8px);
-    }
-
-    .secondary-tab {
-      background: linear-gradient(135deg, #ffffff, #eef2ff) !important;
-      color: var(--primary-dark) !important;
-      border: 1px solid rgba(79,70,229,0.14);
-      box-shadow: 0 4px 12px rgba(79,70,229,0.08);
-    }
-
-    .tab-active {
-      outline: 3px solid rgba(236,72,153,0.28);
-      box-shadow: 0 8px 20px rgba(79,70,229,0.24) !important;
-      filter: saturate(1.12);
-    }
-
-    .tab-inactive {
-      opacity: 0.72;
-      transform: scale(0.96);
-    }
-
-    .main-tab.tab-inactive {
-      opacity: 0.9;
-      transform: translateY(-8px) scale(0.97);
-    }
-
-    .empty {
+      background: white;
       color: var(--muted);
-      text-align: center;
-      padding: 18px;
-      line-height: 1.6;
-      background: linear-gradient(135deg, var(--surface), #ffffff);
-      border: 1px dashed rgba(124,58,237,0.18);
-      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .bottom-nav button.tab-active {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-color: #c7d2fe;
+      box-shadow: inset 0 3px 0 var(--primary);
+    }
+
+    .confirm-box {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--danger-soft);
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      font-weight: 700;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
     }
   </style>
 </head>
 
 <body>
-
   <div class="app">
-
     <header>
       <h1>כרטיסיות אוצר מילים</h1>
-
-      <p class="subtitle">
-        יוצרים כרטיסיות עם עד 10 מילים.
-        לוחצים על המילה כדי לחשוף את התשובה.
-      </p>
+      <p class="subtitle">תרגול פשוט של מילים באנגלית ובעברית. בחר כיוון תרגול, לחץ על כרטיס וחשוף את התשובה.</p>
     </header>
 
     <section id="learnView" class="panel">
-
       <div class="top-row">
-
         <div>
-          <div id="currentTitle" style="font-weight:800">
-            כרטיסייה
-          </div>
-
+          <h2 style="margin-bottom:4px">לימוד</h2>
+          <div id="currentTitle" style="font-weight:800">כרטיסייה</div>
           <div id="cardCounter" class="small"></div>
         </div>
 
-        <button id="randomBtn">
-          כרטיסייה אחרת
+        <button id="randomBtn" class="secondary">
+          תרגל כרטיסייה אחרת
         </button>
-
       </div>
 
       <div class="mode-box">
-        <div>
-          <strong>מצב לימוד</strong>
-          <div id="modeText" class="small"></div>
-        </div>
+        <strong>איך לתרגל?</strong>
+        <div id="modeText" class="small"></div>
 
         <div class="mode-buttons">
           <button id="modeEnToHeBtn" class="mode-btn">
-            אנגלית ← עברית
+            אני רואה אנגלית, מנחש עברית
           </button>
 
           <button id="modeHeToEnBtn" class="mode-btn">
-            עברית ← אנגלית
+            אני רואה עברית, מנחש אנגלית
           </button>
         </div>
       </div>
 
       <p class="hint" id="learnHint">
-        לחיצה על מילה באנגלית תציג או תסתיר את הפירוש בעברית.
+        לחץ על הכרטיס כדי לחשוף את התשובה.
       </p>
 
       <div class="learn-actions">
-        <button id="revealAllBtn" class="green">
-          חשוף הכל
+        <button id="revealAllBtn" class="secondary">
+          חשוף את כל התשובות
         </button>
 
-        <button id="hideAllBtn" class="light">
-          הסתר הכל
+        <button id="hideAllBtn" class="ghost">
+          הסתר את כל התשובות
         </button>
       </div>
 
       <div id="wordList" class="word-list"></div>
-
     </section>
 
     <section id="createView" class="panel hidden">
-
-      <h2 style="margin-top:0">
-        יצירת כרטיסייה
-      </h2>
+      <h2>יצירת כרטיסייה</h2>
+      <p class="hint">מלא לפחות מילה אחת. אפשר להוסיף עד 10 מילים בכרטיסייה.</p>
 
       <input
         id="cardTitle"
@@ -514,72 +495,87 @@
         placeholder="שם הכרטיסייה, לדוגמה: Day 1"
       >
 
-      <div style="height:12px"></div>
+      <div class="form-headings">
+        <div>מילה באנגלית</div>
+        <div></div>
+        <div>פירוש בעברית</div>
+      </div>
 
       <div id="inputs"></div>
 
-      <button id="saveBtn" class="green">
-        שמור כרטיסייה
-      </button>
+      <div class="card-actions">
+        <button id="addCreateRowBtn" class="secondary">
+          הוסף עוד מילה
+        </button>
+
+        <button id="saveBtn" class="success">
+          שמור כרטיסייה
+        </button>
+      </div>
 
       <div id="saveStatus" class="status"></div>
-
+      <div id="afterSaveActions" class="card-actions hidden">
+        <button id="goLearnAfterSaveBtn" class="secondary">
+          עבור ללימוד
+        </button>
+      </div>
     </section>
 
     <section id="manageView" class="panel hidden">
-
-      <div class="top-row">
-
-        <h2 style="margin:0">
-          ניהול כרטיסיות
-        </h2>
-
-      </div>
-
+      <h2>הכרטיסיות שלי</h2>
+      <p class="hint">כאן אפשר לערוך או למחוק כרטיסיות קיימות.</p>
       <div id="cardsList"></div>
-
     </section>
 
+    <section id="editView" class="panel hidden">
+      <div class="top-row">
+        <h2 id="editHeading">עריכת כרטיסייה</h2>
+        <button id="backToManageBtn" class="ghost">חזרה לכרטיסיות שלי</button>
+      </div>
+
+      <input
+        id="editTitle"
+        class="card-title-input"
+        placeholder="שם הכרטיסייה"
+      >
+
+      <div class="form-headings">
+        <div>מילה באנגלית</div>
+        <div></div>
+        <div>פירוש בעברית</div>
+      </div>
+
+      <div id="editInputs"></div>
+
+      <div class="card-actions">
+        <button id="addEditRowBtn" class="secondary">
+          הוסף עוד מילה
+        </button>
+
+        <button id="saveEditBtn" class="success">
+          שמור שינויים
+        </button>
+      </div>
+
+      <div id="editStatus" class="status"></div>
+    </section>
   </div>
 
   <div class="bottom-nav">
-
-    <button
-      id="createBtn"
-      class="secondary-tab tab-inactive"
-    >
-      יצירה
-    </button>
-
-    <button
-      id="learnBtn"
-      class="main-tab tab-active"
-    >
-      לימוד
-    </button>
-
-    <button
-      id="manageBtn"
-      class="secondary-tab tab-inactive"
-    >
-      ניהול
-    </button>
-
+    <button id="createBtn">יצירה</button>
+    <button id="learnBtn" class="tab-active">לימוד</button>
+    <button id="manageBtn">ניהול</button>
   </div>
 
   <script>
-
     const STORAGE_KEY = "vocabulary_cards";
     const MODE_KEY = "vocabulary_learning_mode";
+    const MAX_WORDS = 10;
 
-    function makeId() {
-      return (
-        "id_" +
-        Date.now() +
-        "_" +
-        Math.floor(Math.random() * 1000000)
-      );
-    }
+    let currentCardId = null;
+    let createRowCount = 3;
+    let editRowCount = 3;
+    let editingCardId = null;
 
     const starterCards = [
       {
@@ -648,6 +644,10 @@
       }
     ];
 
+    function makeId() {
+      return "id_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replace(/&/g, "&amp;")
@@ -661,11 +661,7 @@
       const raw = localStorage.getItem(STORAGE_KEY);
 
       if (!raw) {
-        localStorage.setItem(
-          STORAGE_KEY,
-          JSON.stringify(starterCards)
-        );
-
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(starterCards));
         return starterCards;
       }
 
@@ -678,10 +674,7 @@
     }
 
     function setCards(cards) {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(cards)
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
     }
 
     function ensureStarterCardsExist() {
@@ -690,16 +683,13 @@
 
       starterCards.forEach(sampleCard => {
         const exists = cards.some(card => card.id === sampleCard.id);
-
         if (!exists) {
           cards.push(sampleCard);
           changed = true;
         }
       });
 
-      if (changed) {
-        setCards(cards);
-      }
+      if (changed) setCards(cards);
     }
 
     function getLearningMode() {
@@ -714,54 +704,88 @@
 
     function updateModeUi() {
       const mode = getLearningMode();
-
       const enBtn = document.getElementById("modeEnToHeBtn");
       const heBtn = document.getElementById("modeHeToEnBtn");
       const modeText = document.getElementById("modeText");
-      const learnHint = document.getElementById("learnHint");
 
       enBtn.classList.toggle("active", mode === "en-to-he");
       heBtn.classList.toggle("active", mode === "he-to-en");
 
       if (mode === "en-to-he") {
-        modeText.textContent = "מוצגת מילה באנגלית, בלחיצה נחשף הפירוש בעברית.";
-        learnHint.textContent = "לחיצה על מילה באנגלית תציג או תסתיר את הפירוש בעברית.";
+        modeText.textContent = "תראה מילה באנגלית, תנסה לזכור את הפירוש בעברית.";
       } else {
-        modeText.textContent = "מוצג פירוש בעברית, בלחיצה נחשפת המילה באנגלית.";
-        learnHint.textContent = "לחיצה על פירוש בעברית תציג או תסתיר את המילה באנגלית.";
+        modeText.textContent = "תראה פירוש בעברית, תנסה לזכור את המילה באנגלית.";
       }
     }
 
-    function buildInputs() {
-      const container =
-        document.getElementById("inputs");
-
-      container.innerHTML = "";
-
-      for (let i = 1; i <= 10; i++) {
-        const pair =
-          document.createElement("div");
-
-        pair.className = "pair";
-
-        pair.innerHTML = `
+    function createPairHtml(prefix, index, english = "", hebrew = "") {
+      return `
+        <div class="pair">
           <input
-            id="en${i}"
+            id="${prefix}-en-${index}"
             class="word-input-en"
-            placeholder="מילה ${i} באנגלית"
+            value="${escapeHtml(english)}"
+            placeholder="English"
           >
 
           <div class="pair-arrow">→</div>
 
           <input
-            id="he${i}"
+            id="${prefix}-he-${index}"
             class="word-input-he"
-            placeholder="פירוש בעברית"
+            value="${escapeHtml(hebrew)}"
+            placeholder="פירוש"
           >
-        `;
+        </div>
+      `;
+    }
 
-        container.appendChild(pair);
+    function buildCreateInputs() {
+      const container = document.getElementById("inputs");
+      container.innerHTML = "";
+
+      for (let i = 0; i < createRowCount; i++) {
+        container.insertAdjacentHTML("beforeend", createPairHtml("create", i));
       }
+
+      document.getElementById("addCreateRowBtn").disabled = createRowCount >= MAX_WORDS;
+    }
+
+    function addCreateRow() {
+      if (createRowCount >= MAX_WORDS) return;
+      createRowCount++;
+      buildCreateInputs();
+    }
+
+    function buildEditInputs(card) {
+      const container = document.getElementById("editInputs");
+      container.innerHTML = "";
+
+      editRowCount = Math.max(3, Math.min(MAX_WORDS, card.words.length || 3));
+
+      for (let i = 0; i < editRowCount; i++) {
+        const word = card.words[i] || { english: "", hebrew: "" };
+        container.insertAdjacentHTML("beforeend", createPairHtml("edit", i, word.english, word.hebrew));
+      }
+
+      document.getElementById("addEditRowBtn").disabled = editRowCount >= MAX_WORDS;
+    }
+
+    function addEditRow() {
+      if (editRowCount >= MAX_WORDS) return;
+
+      const existing = collectWordsFromPrefix("edit", editRowCount, true);
+      editRowCount++;
+
+      const container = document.getElementById("editInputs");
+      container.innerHTML = "";
+
+      for (let i = 0; i < editRowCount; i++) {
+        const word = existing.words[i] || { english: "", hebrew: "" };
+        container.insertAdjacentHTML("beforeend", createPairHtml("edit", i, word.english, word.hebrew));
+      }
+
+      document.getElementById("addEditRowBtn").disabled = editRowCount >= MAX_WORDS;
     }
 
     function setActiveTab(viewName) {
@@ -771,38 +795,18 @@
         manage: document.getElementById("manageBtn")
       };
 
-      Object.keys(tabs).forEach(key => {
-        tabs[key].classList.remove("tab-active");
-        tabs[key].classList.add("tab-inactive");
-      });
+      Object.values(tabs).forEach(tab => tab.classList.remove("tab-active"));
 
-      tabs[viewName].classList.remove("tab-inactive");
-      tabs[viewName].classList.add("tab-active");
+      if (tabs[viewName]) tabs[viewName].classList.add("tab-active");
     }
 
     function showView(viewName) {
-      document
-        .getElementById("learnView")
-        .classList.toggle(
-          "hidden",
-          viewName !== "learn"
-        );
+      document.getElementById("learnView").classList.toggle("hidden", viewName !== "learn");
+      document.getElementById("createView").classList.toggle("hidden", viewName !== "create");
+      document.getElementById("manageView").classList.toggle("hidden", viewName !== "manage");
+      document.getElementById("editView").classList.toggle("hidden", viewName !== "edit");
 
-      document
-        .getElementById("createView")
-        .classList.toggle(
-          "hidden",
-          viewName !== "create"
-        );
-
-      document
-        .getElementById("manageView")
-        .classList.toggle(
-          "hidden",
-          viewName !== "manage"
-        );
-
-      setActiveTab(viewName);
+      setActiveTab(viewName === "edit" ? "manage" : viewName);
 
       if (viewName === "learn") {
         updateModeUi();
@@ -814,33 +818,16 @@
       }
     }
 
-    let currentCardId = null;
-
     function loadRandomCard(chooseNew = true) {
       const cards = getCards();
-
-      const wordList =
-        document.getElementById("wordList");
-
-      const currentTitle =
-        document.getElementById("currentTitle");
-
-      const cardCounter =
-        document.getElementById("cardCounter");
+      const wordList = document.getElementById("wordList");
+      const currentTitle = document.getElementById("currentTitle");
+      const cardCounter = document.getElementById("cardCounter");
 
       if (!cards.length) {
-        currentTitle.textContent =
-          "אין עדיין כרטיסיות";
-
+        currentTitle.textContent = "אין עדיין כרטיסיות";
         cardCounter.textContent = "";
-
-        wordList.innerHTML = `
-          <div class="empty">
-            עבור למסך יצירה
-            והוסף כרטיסייה ראשונה.
-          </div>
-        `;
-
+        wordList.innerHTML = `<div class="empty">עבור ליצירה והוסף כרטיסייה ראשונה.</div>`;
         return;
       }
 
@@ -857,59 +844,34 @@
           availableCards = cards.filter(item => item.id !== currentCardId);
         }
 
-        card =
-          availableCards[
-            Math.floor(Math.random() * availableCards.length)
-          ];
-
+        card = availableCards[Math.floor(Math.random() * availableCards.length)];
         currentCardId = card.id;
       }
 
-      currentTitle.textContent =
-        card.title;
-
-      cardCounter.textContent =
-        card.words.length + " מילים";
-
+      currentTitle.textContent = card.title;
+      cardCounter.textContent = card.words.length + " מילים";
       wordList.innerHTML = "";
 
       const mode = getLearningMode();
 
       card.words.forEach((word, index) => {
-        const item =
-          document.createElement("div");
-
+        const item = document.createElement("div");
         item.className = "word-item";
 
-        const promptText =
-          mode === "en-to-he"
-            ? word.english
-            : word.hebrew;
-
-        const answerText =
-          mode === "en-to-he"
-            ? word.hebrew
-            : word.english;
-
-        const promptDirection =
-          mode === "en-to-he"
-            ? "ltr"
-            : "rtl";
-
-        const answerDirection =
-          mode === "en-to-he"
-            ? "rtl"
-            : "ltr";
+        const promptText = mode === "en-to-he" ? word.english : word.hebrew;
+        const answerText = mode === "en-to-he" ? word.hebrew : word.english;
+        const promptDirection = mode === "en-to-he" ? "ltr" : "rtl";
+        const answerDirection = mode === "en-to-he" ? "rtl" : "ltr";
 
         item.innerHTML = `
-          <div class="word-number">
-            ${index + 1}
-          </div>
+          <div class="word-number">${index + 1}</div>
 
           <div class="word-card">
             <div class="prompt-word" dir="${promptDirection}">
               ${escapeHtml(promptText)}
             </div>
+
+            <div class="tap-note">לחץ לחשיפה</div>
 
             <div class="answer-word" dir="${answerDirection}">
               ${escapeHtml(answerText)}
@@ -917,324 +879,183 @@
           </div>
         `;
 
-        const prompt =
-          item.querySelector(".prompt-word");
+        const cardElement = item.querySelector(".word-card");
+        const answer = item.querySelector(".answer-word");
+        const tapNote = item.querySelector(".tap-note");
 
-        const answer =
-          item.querySelector(".answer-word");
-
-        prompt.addEventListener(
-          "click",
-          () => {
-            answer.classList.toggle("visible");
-          }
-        );
+        cardElement.addEventListener("click", () => {
+          answer.classList.toggle("visible");
+          tapNote.textContent = answer.classList.contains("visible") ? "לחץ להסתרה" : "לחץ לחשיפה";
+        });
 
         wordList.appendChild(item);
       });
     }
 
-    function saveCard() {
-      const title =
-        document
-          .getElementById("cardTitle")
-          .value
-          .trim() || "כרטיסייה חדשה";
-
+    function collectWordsFromPrefix(prefix, count, allowEmptyAll = false) {
       const words = [];
 
-      const status =
-        document.getElementById("saveStatus");
+      for (let i = 0; i < count; i++) {
+        const english = document.getElementById(`${prefix}-en-${i}`).value.trim();
+        const hebrew = document.getElementById(`${prefix}-he-${i}`).value.trim();
 
-      for (let i = 1; i <= 10; i++) {
-        const english =
-          document
-            .getElementById(`en${i}`)
-            .value
-            .trim();
-
-        const hebrew =
-          document
-            .getElementById(`he${i}`)
-            .value
-            .trim();
-
-        if (!english && !hebrew) {
-          continue;
-        }
+        if (!english && !hebrew) continue;
 
         if ((english && !hebrew) || (!english && hebrew)) {
-          status.textContent =
-            `בשורה ${i} חייבים למלא גם מילה וגם פירוש`;
-
-          status.style.color =
-            "var(--red)";
-
-          return;
-        }
-
-        words.push({
-          english,
-          hebrew
-        });
-      }
-
-      if (words.length === 0) {
-        status.textContent =
-          "צריך למלא לפחות מילה אחת עם פירוש";
-
-        status.style.color =
-          "var(--red)";
-
-        return;
-      }
-
-      const cards = getCards();
-
-      cards.push({
-        id: makeId(),
-        title,
-        words
-      });
-
-      setCards(cards);
-
-      document.getElementById(
-        "cardTitle"
-      ).value = "";
-
-      buildInputs();
-
-      status.textContent =
-        "הכרטיסייה נשמרה";
-
-      status.style.color =
-        "var(--green)";
-
-      loadRandomCard(false);
-      renderCardsList();
-    }
-
-    function renderCardsList() {
-      const cards = getCards();
-
-      const list =
-        document.getElementById("cardsList");
-
-      list.innerHTML = "";
-
-      if (!cards.length) {
-        list.innerHTML = `
-          <div class="empty">
-            אין כרטיסיות שמורות.
-          </div>
-        `;
-
-        return;
-      }
-
-      cards.forEach(card => {
-        const div =
-          document.createElement("div");
-
-        div.className = "saved-card";
-
-        div.innerHTML = `
-          <div class="saved-card-title">
-            ${escapeHtml(card.title)}
-          </div>
-
-          <div class="small">
-            ${card.words.length} מילים
-          </div>
-        `;
-
-        const actions =
-          document.createElement("div");
-
-        actions.className = "card-actions";
-
-        const editBtn =
-          document.createElement("button");
-
-        editBtn.textContent = "ערוך";
-        editBtn.className = "orange";
-
-        editBtn.addEventListener(
-          "click",
-          () => {
-            openEditCard(card.id, div);
-          }
-        );
-
-        const deleteBtn =
-          document.createElement("button");
-
-        deleteBtn.textContent = "מחק";
-        deleteBtn.className = "red";
-
-        deleteBtn.addEventListener(
-          "click",
-          () => {
-            deleteCard(card.id);
-          }
-        );
-
-        actions.appendChild(editBtn);
-        actions.appendChild(deleteBtn);
-        div.appendChild(actions);
-
-        list.appendChild(div);
-      });
-    }
-
-    function openEditCard(cardId, cardElement) {
-      const cards = getCards();
-      const card = cards.find(item => item.id === cardId);
-
-      if (!card) return;
-
-      const oldEditBox = cardElement.querySelector(".edit-box");
-
-      if (oldEditBox) {
-        oldEditBox.remove();
-        return;
-      }
-
-      const editBox = document.createElement("div");
-      editBox.className = "edit-box";
-
-      let html = `
-        <h3 style="margin-top:0">עריכת כרטיסייה</h3>
-
-        <input
-          id="edit-title-${cardId}"
-          value="${escapeHtml(card.title)}"
-          placeholder="שם הכרטיסייה"
-        >
-
-        <div style="height:12px"></div>
-      `;
-
-      for (let index = 0; index < 10; index++) {
-        const word = card.words[index] || { english: "", hebrew: "" };
-
-        html += `
-          <div class="pair">
-            <input
-              id="edit-en-${cardId}-${index}"
-              class="word-input-en"
-              value="${escapeHtml(word.english)}"
-              placeholder="מילה באנגלית"
-            >
-
-            <div class="pair-arrow">→</div>
-
-            <input
-              id="edit-he-${cardId}-${index}"
-              class="word-input-he"
-              value="${escapeHtml(word.hebrew)}"
-              placeholder="פירוש בעברית"
-            >
-          </div>
-        `;
-      }
-
-      html += `
-        <div class="card-actions">
-          <button class="green" id="save-edit-${cardId}">
-            שמור עריכה
-          </button>
-
-          <button class="light" id="cancel-edit-${cardId}">
-            ביטול
-          </button>
-        </div>
-
-        <div class="status" id="edit-status-${cardId}"></div>
-      `;
-
-      editBox.innerHTML = html;
-      cardElement.appendChild(editBox);
-
-      document
-        .getElementById(`save-edit-${cardId}`)
-        .addEventListener("click", () => saveEditedCard(cardId));
-
-      document
-        .getElementById(`cancel-edit-${cardId}`)
-        .addEventListener("click", () => editBox.remove());
-    }
-
-    function saveEditedCard(cardId) {
-      const cards = getCards();
-      const cardIndex = cards.findIndex(card => card.id === cardId);
-
-      if (cardIndex === -1) return;
-
-      const status =
-        document.getElementById(`edit-status-${cardId}`);
-
-      const title =
-        document
-          .getElementById(`edit-title-${cardId}`)
-          .value
-          .trim() || "כרטיסייה ללא שם";
-
-      const words = [];
-
-      for (let i = 0; i < 10; i++) {
-        const english =
-          document
-            .getElementById(`edit-en-${cardId}-${i}`)
-            .value
-            .trim();
-
-        const hebrew =
-          document
-            .getElementById(`edit-he-${cardId}-${i}`)
-            .value
-            .trim();
-
-        if (!english && !hebrew) {
-          continue;
-        }
-
-        if ((english && !hebrew) || (!english && hebrew)) {
-          status.textContent =
-            `בשורה ${i + 1} חייבים למלא גם מילה וגם פירוש`;
-          status.style.color = "var(--red)";
-          return;
+          return {
+            ok: false,
+            message: `בשורה ${i + 1} חייבים למלא גם מילה וגם פירוש`
+          };
         }
 
         words.push({ english, hebrew });
       }
 
-      if (words.length === 0) {
-        status.textContent =
-          "צריך להשאיר לפחות מילה אחת עם פירוש";
-        status.style.color = "var(--red)";
+      if (!allowEmptyAll && words.length === 0) {
+        return {
+          ok: false,
+          message: "צריך למלא לפחות מילה אחת עם פירוש"
+        };
+      }
+
+      return { ok: true, words };
+    }
+
+    function saveCard() {
+      const title = document.getElementById("cardTitle").value.trim() || "כרטיסייה חדשה";
+      const status = document.getElementById("saveStatus");
+      const result = collectWordsFromPrefix("create", createRowCount);
+
+      if (!result.ok) {
+        status.textContent = result.message;
+        status.style.color = "var(--danger)";
+        document.getElementById("afterSaveActions").classList.add("hidden");
         return;
       }
+
+      const cards = getCards();
+
+      const newCard = {
+        id: makeId(),
+        title,
+        words: result.words
+      };
+
+      cards.push(newCard);
+      setCards(cards);
+      currentCardId = newCard.id;
+
+      document.getElementById("cardTitle").value = "";
+      createRowCount = 3;
+      buildCreateInputs();
+
+      status.textContent = "הכרטיסייה נשמרה. רוצה להתחיל ללמוד אותה?";
+      status.style.color = "var(--success)";
+      document.getElementById("afterSaveActions").classList.remove("hidden");
+
+      renderCardsList();
+    }
+
+    function renderCardsList() {
+      const cards = getCards();
+      const list = document.getElementById("cardsList");
+      list.innerHTML = "";
+
+      if (!cards.length) {
+        list.innerHTML = `<div class="empty">אין כרטיסיות שמורות.</div>`;
+        return;
+      }
+
+      cards.forEach(card => {
+        const div = document.createElement("div");
+        div.className = "saved-card";
+
+        div.innerHTML = `
+          <div class="saved-card-title">${escapeHtml(card.title)}</div>
+          <div class="small">${card.words.length} מילים</div>
+
+          <div class="card-actions">
+            <button class="secondary" data-action="edit">ערוך כרטיסייה</button>
+            <button class="danger" data-action="delete">מחק</button>
+          </div>
+
+          <div class="confirm-box hidden">
+            למחוק את הכרטיסייה? אי אפשר לשחזר.
+            <div class="confirm-actions">
+              <button class="danger" data-action="confirm-delete">כן, מחק</button>
+              <button class="ghost" data-action="cancel-delete">ביטול</button>
+            </div>
+          </div>
+        `;
+
+        div.querySelector('[data-action="edit"]').addEventListener("click", () => openEditCard(card.id));
+        div.querySelector('[data-action="delete"]').addEventListener("click", () => {
+          div.querySelector(".confirm-box").classList.remove("hidden");
+        });
+        div.querySelector('[data-action="cancel-delete"]').addEventListener("click", () => {
+          div.querySelector(".confirm-box").classList.add("hidden");
+        });
+        div.querySelector('[data-action="confirm-delete"]').addEventListener("click", () => deleteCard(card.id));
+
+        list.appendChild(div);
+      });
+    }
+
+    function openEditCard(cardId) {
+      const cards = getCards();
+      const card = cards.find(item => item.id === cardId);
+
+      if (!card) return;
+
+      editingCardId = cardId;
+
+      document.getElementById("editHeading").textContent = `עריכת הכרטיסייה: ${card.title}`;
+      document.getElementById("editTitle").value = card.title;
+      document.getElementById("editStatus").textContent = "";
+
+      buildEditInputs(card);
+      showView("edit");
+    }
+
+    function saveEditedCard() {
+      if (!editingCardId) return;
+
+      const cards = getCards();
+      const cardIndex = cards.findIndex(card => card.id === editingCardId);
+      const status = document.getElementById("editStatus");
+
+      if (cardIndex === -1) return;
+
+      const result = collectWordsFromPrefix("edit", editRowCount);
+
+      if (!result.ok) {
+        status.textContent = result.message;
+        status.style.color = "var(--danger)";
+        return;
+      }
+
+      const title = document.getElementById("editTitle").value.trim() || "כרטיסייה ללא שם";
 
       cards[cardIndex] = {
         ...cards[cardIndex],
         title,
-        words
+        words: result.words
       };
 
       setCards(cards);
 
-      renderCardsList();
-      loadRandomCard(false);
+      status.textContent = "השינויים נשמרו";
+      status.style.color = "var(--success)";
+
+      if (currentCardId === editingCardId) {
+        loadRandomCard(false);
+      }
+
+      setTimeout(() => showView("manage"), 350);
     }
 
     function deleteCard(id) {
-      const cards =
-        getCards().filter(
-          card => card.id !== id
-        );
-
+      const cards = getCards().filter(card => card.id !== id);
       setCards(cards);
 
       if (currentCardId === id) {
@@ -1246,90 +1067,37 @@
     }
 
     function revealAllAnswers() {
-      document
-        .querySelectorAll(".answer-word")
-        .forEach(answer => {
-          answer.classList.add("visible");
-        });
+      document.querySelectorAll(".answer-word").forEach(answer => answer.classList.add("visible"));
+      document.querySelectorAll(".tap-note").forEach(note => note.textContent = "לחץ להסתרה");
     }
 
     function hideAllAnswers() {
-      document
-        .querySelectorAll(".answer-word")
-        .forEach(answer => {
-          answer.classList.remove("visible");
-        });
+      document.querySelectorAll(".answer-word").forEach(answer => answer.classList.remove("visible"));
+      document.querySelectorAll(".tap-note").forEach(note => note.textContent = "לחץ לחשיפה");
     }
 
-    document
-      .getElementById("learnBtn")
-      .addEventListener(
-        "click",
-        () => showView("learn")
-      );
+    document.getElementById("learnBtn").addEventListener("click", () => showView("learn"));
+    document.getElementById("createBtn").addEventListener("click", () => showView("create"));
+    document.getElementById("manageBtn").addEventListener("click", () => showView("manage"));
 
-    document
-      .getElementById("createBtn")
-      .addEventListener(
-        "click",
-        () => showView("create")
-      );
+    document.getElementById("randomBtn").addEventListener("click", () => loadRandomCard(true));
+    document.getElementById("modeEnToHeBtn").addEventListener("click", () => setLearningMode("en-to-he"));
+    document.getElementById("modeHeToEnBtn").addEventListener("click", () => setLearningMode("he-to-en"));
+    document.getElementById("revealAllBtn").addEventListener("click", revealAllAnswers);
+    document.getElementById("hideAllBtn").addEventListener("click", hideAllAnswers);
 
-    document
-      .getElementById("manageBtn")
-      .addEventListener(
-        "click",
-        () => showView("manage")
-      );
+    document.getElementById("addCreateRowBtn").addEventListener("click", addCreateRow);
+    document.getElementById("saveBtn").addEventListener("click", saveCard);
+    document.getElementById("goLearnAfterSaveBtn").addEventListener("click", () => showView("learn"));
 
-    document
-      .getElementById("randomBtn")
-      .addEventListener(
-        "click",
-        () => loadRandomCard(true)
-      );
-
-    document
-      .getElementById("modeEnToHeBtn")
-      .addEventListener(
-        "click",
-        () => setLearningMode("en-to-he")
-      );
-
-    document
-      .getElementById("modeHeToEnBtn")
-      .addEventListener(
-        "click",
-        () => setLearningMode("he-to-en")
-      );
-
-    document
-      .getElementById("revealAllBtn")
-      .addEventListener(
-        "click",
-        revealAllAnswers
-      );
-
-    document
-      .getElementById("hideAllBtn")
-      .addEventListener(
-        "click",
-        hideAllAnswers
-      );
-
-    document
-      .getElementById("saveBtn")
-      .addEventListener(
-        "click",
-        saveCard
-      );
+    document.getElementById("backToManageBtn").addEventListener("click", () => showView("manage"));
+    document.getElementById("addEditRowBtn").addEventListener("click", addEditRow);
+    document.getElementById("saveEditBtn").addEventListener("click", saveEditedCard);
 
     ensureStarterCardsExist();
-    buildInputs();
+    buildCreateInputs();
     updateModeUi();
     loadRandomCard();
-
   </script>
-
 </body>
 </html>
