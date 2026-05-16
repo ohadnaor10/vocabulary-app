@@ -237,16 +237,57 @@
       border-color: var(--primary);
     }
 
+    .card-title-input {
+      background:
+        linear-gradient(135deg, rgba(236,72,153,0.10), rgba(79,70,229,0.10)),
+        #ffffff;
+      border: 2px solid rgba(79,70,229,0.24);
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
     .pair {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 34px 1fr;
       gap: 8px;
       margin-bottom: 10px;
+      align-items: center;
+    }
+
+    .word-input-en {
+      direction: ltr;
+      text-align: left;
+      border-color: rgba(79,70,229,0.28);
+      background:
+        linear-gradient(135deg, #ffffff, rgba(238,242,255,0.95));
+    }
+
+    .word-input-he {
+      direction: rtl;
+      text-align: right;
+      border-color: rgba(20,184,166,0.34);
+      background:
+        linear-gradient(135deg, #ffffff, rgba(204,251,241,0.55));
+    }
+
+    .pair-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-weight: 900;
+      font-size: 19px;
+      user-select: none;
     }
 
     @media (max-width: 560px) {
       .pair {
         grid-template-columns: 1fr;
+      }
+
+      .pair-arrow {
+        transform: rotate(90deg);
+        height: 14px;
       }
     }
 
@@ -364,7 +405,7 @@
       <h1>כרטיסיות אוצר מילים</h1>
 
       <p class="subtitle">
-        יוצרים כרטיסיות עם 10 מילים.
+        יוצרים כרטיסיות עם עד 10 מילים.
         לוחצים על המילה כדי לחשוף את התשובה.
       </p>
     </header>
@@ -430,6 +471,7 @@
 
       <input
         id="cardTitle"
+        class="card-title-input"
         placeholder="שם הכרטיסייה, לדוגמה: Day 1"
       >
 
@@ -603,6 +645,24 @@
       );
     }
 
+    function ensureStarterCardsExist() {
+      const cards = getCards();
+      let changed = false;
+
+      starterCards.forEach(sampleCard => {
+        const exists = cards.some(card => card.id === sampleCard.id);
+
+        if (!exists) {
+          cards.push(sampleCard);
+          changed = true;
+        }
+      });
+
+      if (changed) {
+        setCards(cards);
+      }
+    }
+
     function getLearningMode() {
       return localStorage.getItem(MODE_KEY) || "en-to-he";
     }
@@ -648,13 +708,15 @@
         pair.innerHTML = `
           <input
             id="en${i}"
-            dir="ltr"
+            class="word-input-en"
             placeholder="מילה ${i} באנגלית"
           >
 
+          <div class="pair-arrow">←</div>
+
           <input
             id="he${i}"
-            dir="rtl"
+            class="word-input-he"
             placeholder="פירוש בעברית"
           >
         `;
@@ -858,9 +920,13 @@
             .value
             .trim();
 
-        if (!english || !hebrew) {
+        if (!english && !hebrew) {
+          continue;
+        }
+
+        if ((english && !hebrew) || (!english && hebrew)) {
           status.textContent =
-            `חסרה מילה או פירוש בשורה ${i}`;
+            `בשורה ${i} חייבים למלא גם מילה וגם פירוש`;
 
           status.style.color =
             "var(--red)";
@@ -872,6 +938,16 @@
           english,
           hebrew
         });
+      }
+
+      if (words.length === 0) {
+        status.textContent =
+          "צריך למלא לפחות מילה אחת עם פירוש";
+
+        status.style.color =
+          "var(--red)";
+
+        return;
       }
 
       const cards = getCards();
@@ -1001,25 +1077,29 @@
         <div style="height:12px"></div>
       `;
 
-      card.words.forEach((word, index) => {
+      for (let index = 0; index < 10; index++) {
+        const word = card.words[index] || { english: "", hebrew: "" };
+
         html += `
           <div class="pair">
             <input
               id="edit-en-${cardId}-${index}"
-              dir="ltr"
+              class="word-input-en"
               value="${escapeHtml(word.english)}"
               placeholder="מילה באנגלית"
             >
 
+            <div class="pair-arrow">←</div>
+
             <input
               id="edit-he-${cardId}-${index}"
-              dir="rtl"
+              class="word-input-he"
               value="${escapeHtml(word.hebrew)}"
               placeholder="פירוש בעברית"
             >
           </div>
         `;
-      });
+      }
 
       html += `
         <div class="card-actions">
@@ -1077,14 +1157,25 @@
             .value
             .trim();
 
-        if (!english || !hebrew) {
+        if (!english && !hebrew) {
+          continue;
+        }
+
+        if ((english && !hebrew) || (!english && hebrew)) {
           status.textContent =
-            `חסרה מילה או פירוש בשורה ${i + 1}`;
+            `בשורה ${i + 1} חייבים למלא גם מילה וגם פירוש`;
           status.style.color = "var(--red)";
           return;
         }
 
         words.push({ english, hebrew });
+      }
+
+      if (words.length === 0) {
+        status.textContent =
+          "צריך להשאיר לפחות מילה אחת עם פירוש";
+        status.style.color = "var(--red)";
+        return;
       }
 
       cards[cardIndex] = {
@@ -1194,6 +1285,7 @@
         saveCard
       );
 
+    ensureStarterCardsExist();
     buildInputs();
     updateModeUi();
     loadRandomCard();
