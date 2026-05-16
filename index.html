@@ -272,10 +272,11 @@
 
     .pair {
       display: grid;
-      grid-template-columns: 1fr 34px 1fr;
-      gap: 8px;
+      grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
+      gap: 7px;
       margin-bottom: 10px;
       align-items: center;
+      direction: ltr;
     }
 
     .word-input-en {
@@ -283,6 +284,7 @@
       text-align: left;
       border-color: rgba(79,70,229,0.24);
       background: linear-gradient(135deg, #ffffff, #eef2ff);
+      min-width: 0;
     }
 
     .word-input-he {
@@ -290,6 +292,7 @@
       text-align: right;
       border-color: rgba(20,184,166,0.26);
       background: linear-gradient(135deg, #ffffff, #ecfdf5);
+      min-width: 0;
     }
 
     .pair-arrow {
@@ -298,18 +301,27 @@
       justify-content: center;
       color: var(--accent);
       font-weight: 900;
-      font-size: 19px;
+      font-size: 18px;
       user-select: none;
+      line-height: 1;
     }
 
     @media (max-width: 560px) {
       .pair {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) 24px minmax(0, 1fr);
+        gap: 5px;
+      }
+
+      .pair input {
+        padding: 10px 8px;
+        font-size: 14px;
+        border-radius: 11px;
       }
 
       .pair-arrow {
-        transform: rotate(90deg);
-        height: 14px;
+        font-size: 16px;
+        transform: none;
+        height: auto;
       }
     }
 
@@ -739,7 +751,7 @@
             placeholder="מילה ${i} באנגלית"
           >
 
-          <div class="pair-arrow">←</div>
+          <div class="pair-arrow">→</div>
 
           <input
             id="he${i}"
@@ -1116,7 +1128,7 @@
               placeholder="מילה באנגלית"
             >
 
-            <div class="pair-arrow">←</div>
+            <div class="pair-arrow">→</div>
 
             <input
               id="edit-he-${cardId}-${index}"
