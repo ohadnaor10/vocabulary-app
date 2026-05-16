@@ -481,6 +481,80 @@
       flex-wrap: wrap;
       margin-top: 10px;
     }
+
+    .surprise-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 24, 39, 0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .surprise-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 18px 45px rgba(17, 24, 39, 0.18);
+      position: relative;
+      text-align: right;
+      animation: surprisePop 0.18s ease-out;
+    }
+
+    @keyframes surprisePop {
+      from {
+        transform: scale(0.96);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .surprise-close {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 34px;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 50%;
+      background: var(--surface-soft);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .surprise-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin: 0 0 10px;
+      padding-left: 34px;
+    }
+
+    .surprise-message {
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .surprise-signature {
+      margin-top: 14px;
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
   </style>
 </head>
 
@@ -613,6 +687,27 @@
     </section>
   </div>
 
+
+  <div id="surpriseOverlay" class="surprise-overlay hidden">
+    <div class="surprise-card">
+      <button id="surpriseCloseBtn" class="surprise-close" aria-label="סגור">×</button>
+
+      <div class="surprise-title">
+        הודעה קטנה ממני
+      </div>
+
+      <p class="surprise-message">
+        רק רציתי להגיד שאני שמח לעזור לך עם הלימוד.
+        מקווה שהולך לך טוב ושהמילים מתחילות להיתפס.
+        אתה חשוב לי מאוד, ואני באמת שמח שיכולתי להכין לך את זה.
+      </p>
+
+      <div class="surprise-signature">
+        מאוהד ❤️
+      </div>
+    </div>
+  </div>
+
   <div class="bottom-nav">
     <button id="createBtn">יצירה</button>
     <button id="learnBtn" class="tab-active">לימוד</button>
@@ -622,6 +717,9 @@
   <script>
     const STORAGE_KEY = "vocabulary_cards";
     const MODE_KEY = "vocabulary_learning_mode";
+    const SURPRISE_COUNT_KEY = "vocabulary_surprise_card_open_count";
+    const SURPRISE_NEXT_KEY = "vocabulary_surprise_next_trigger";
+    const SURPRISE_STAGE_KEY = "vocabulary_surprise_stage";
     const MAX_WORDS = 10;
 
     let currentCardId = null;
@@ -913,11 +1011,49 @@
     function loadSpecificCard(cardId) {
       currentCardId = cardId;
       allAnswersVisible = false;
-      loadRandomCard(false);
+      loadRandomCard(false, true);
       document.getElementById("manualCardPicker").classList.add("hidden");
     }
 
-    function loadRandomCard(chooseNew = true) {
+    function getNumberFromStorage(key, fallback) {
+      const value = Number(localStorage.getItem(key));
+      return Number.isFinite(value) && value > 0 ? value : fallback;
+    }
+
+    function getSurpriseStep(stage) {
+      if (stage <= 0) return 20;
+      if (stage === 1) return 40;
+      return 80;
+    }
+
+    function registerCardOpening() {
+      const currentCount = getNumberFromStorage(SURPRISE_COUNT_KEY, 0) + 1;
+      let nextTrigger = getNumberFromStorage(SURPRISE_NEXT_KEY, 20);
+      let stage = getNumberFromStorage(SURPRISE_STAGE_KEY, 0);
+
+      localStorage.setItem(SURPRISE_COUNT_KEY, String(currentCount));
+
+      if (currentCount >= nextTrigger) {
+        showSurpriseMessage();
+
+        stage += 1;
+        const nextStep = getSurpriseStep(stage);
+        nextTrigger = currentCount + nextStep;
+
+        localStorage.setItem(SURPRISE_STAGE_KEY, String(stage));
+        localStorage.setItem(SURPRISE_NEXT_KEY, String(nextTrigger));
+      }
+    }
+
+    function showSurpriseMessage() {
+      document.getElementById("surpriseOverlay").classList.remove("hidden");
+    }
+
+    function closeSurpriseMessage() {
+      document.getElementById("surpriseOverlay").classList.add("hidden");
+    }
+
+    function loadRandomCard(chooseNew = true, countOpening = false) {
       if (chooseNew) {
         allAnswersVisible = false;
       }
@@ -1001,6 +1137,10 @@
       });
 
       applyRevealStateToCurrentCard();
+
+      if (countOpening) {
+        registerCardOpening();
+      }
     }
 
     function collectWordsFromPrefix(prefix, count, allowEmptyAll = false) {
@@ -1186,7 +1326,7 @@
     document.getElementById("createBtn").addEventListener("click", () => showView("create"));
     document.getElementById("manageBtn").addEventListener("click", () => showView("manage"));
 
-    document.getElementById("randomBtn").addEventListener("click", () => loadRandomCard(true));
+    document.getElementById("randomBtn").addEventListener("click", () => loadRandomCard(true, true));
     document.getElementById("manualPickBtn").addEventListener("click", toggleManualPicker);
     document.getElementById("cardSelect").addEventListener("change", event => loadSpecificCard(event.target.value));
     document.getElementById("modeEnToHeBtn").addEventListener("click", () => setLearningMode("en-to-he"));
@@ -1200,11 +1340,12 @@
     document.getElementById("backToManageBtn").addEventListener("click", () => showView("manage"));
     document.getElementById("addEditRowBtn").addEventListener("click", addEditRow);
     document.getElementById("saveEditBtn").addEventListener("click", saveEditedCard);
+    document.getElementById("surpriseCloseBtn").addEventListener("click", closeSurpriseMessage);
 
     ensureStarterCardsExist();
     buildCreateInputs();
     updateModeUi();
-    loadRandomCard();
+    loadRandomCard(true, true);
     updateRevealToggleButton();
   </script>
 </body>
