@@ -182,6 +182,25 @@
       font-size: 14px;
     }
 
+    .manual-card-picker {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+    }
+
+    .manual-card-picker select {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      font-size: 15px;
+    }
+
     .word-list {
       display: flex;
       flex-direction: column;
@@ -448,9 +467,15 @@
           <div id="cardCounter" class="small"></div>
         </div>
 
-        <button id="randomBtn" class="secondary">
-          תרגל כרטיסייה אחרת
-        </button>
+        <div class="card-actions">
+          <button id="randomBtn" class="secondary">
+            תרגל כרטיסייה אחרת
+          </button>
+
+          <button id="manualPickBtn" class="secondary">
+            בחר כרטיסייה
+          </button>
+        </div>
       </div>
 
       <div class="mode-box">
@@ -468,17 +493,18 @@
         </div>
       </div>
 
+      <div id="manualCardPicker" class="manual-card-picker hidden">
+        <strong>בחר כרטיסייה לתרגול</strong>
+        <select id="cardSelect"></select>
+      </div>
+
       <p class="hint" id="learnHint">
         לחץ על הכרטיס כדי לחשוף את התשובה.
       </p>
 
       <div class="learn-actions">
-        <button id="revealAllBtn" class="secondary">
+        <button id="toggleRevealAllBtn" class="secondary">
           חשוף את כל התשובות
-        </button>
-
-        <button id="hideAllBtn" class="ghost">
-          הסתר את כל התשובות
         </button>
       </div>
 
@@ -573,6 +599,7 @@
     const MAX_WORDS = 10;
 
     let currentCardId = null;
+    let allAnswersVisible = false;
     let createRowCount = 3;
     let editRowCount = 3;
     let editingCardId = null;
@@ -818,7 +845,57 @@
       }
     }
 
+    function updateRevealToggleButton() {
+      const btn = document.getElementById("toggleRevealAllBtn");
+      btn.textContent = allAnswersVisible ? "הסתר את כל התשובות" : "חשוף את כל התשובות";
+      btn.className = allAnswersVisible ? "ghost" : "secondary";
+    }
+
+    function applyRevealStateToCurrentCard() {
+      document.querySelectorAll(".answer-word").forEach(answer => {
+        answer.classList.toggle("visible", allAnswersVisible);
+      });
+
+      document.querySelectorAll(".tap-note").forEach(note => {
+        note.textContent = allAnswersVisible ? "לחץ להסתרה" : "לחץ לחשיפה";
+      });
+
+      updateRevealToggleButton();
+    }
+
+    function populateCardSelect() {
+      const select = document.getElementById("cardSelect");
+      const cards = getCards();
+
+      select.innerHTML = "";
+
+      cards.forEach(card => {
+        const option = document.createElement("option");
+        option.value = card.id;
+        option.textContent = card.title;
+        option.selected = card.id === currentCardId;
+        select.appendChild(option);
+      });
+    }
+
+    function toggleManualPicker() {
+      const picker = document.getElementById("manualCardPicker");
+      picker.classList.toggle("hidden");
+      populateCardSelect();
+    }
+
+    function loadSpecificCard(cardId) {
+      currentCardId = cardId;
+      allAnswersVisible = false;
+      loadRandomCard(false);
+      document.getElementById("manualCardPicker").classList.add("hidden");
+    }
+
     function loadRandomCard(chooseNew = true) {
+      if (chooseNew) {
+        allAnswersVisible = false;
+      }
+
       const cards = getCards();
       const wordList = document.getElementById("wordList");
       const currentTitle = document.getElementById("currentTitle");
@@ -851,6 +928,8 @@
       currentTitle.textContent = card.title;
       cardCounter.textContent = card.words.length + " מילים";
       wordList.innerHTML = "";
+
+      populateCardSelect();
 
       const mode = getLearningMode();
 
@@ -886,10 +965,16 @@
         cardElement.addEventListener("click", () => {
           answer.classList.toggle("visible");
           tapNote.textContent = answer.classList.contains("visible") ? "לחץ להסתרה" : "לחץ לחשיפה";
+
+          const answers = Array.from(document.querySelectorAll(".answer-word"));
+          allAnswersVisible = answers.length > 0 && answers.every(item => item.classList.contains("visible"));
+          updateRevealToggleButton();
         });
 
         wordList.appendChild(item);
       });
+
+      applyRevealStateToCurrentCard();
     }
 
     function collectWordsFromPrefix(prefix, count, allowEmptyAll = false) {
@@ -1066,14 +1151,9 @@
       loadRandomCard(false);
     }
 
-    function revealAllAnswers() {
-      document.querySelectorAll(".answer-word").forEach(answer => answer.classList.add("visible"));
-      document.querySelectorAll(".tap-note").forEach(note => note.textContent = "לחץ להסתרה");
-    }
-
-    function hideAllAnswers() {
-      document.querySelectorAll(".answer-word").forEach(answer => answer.classList.remove("visible"));
-      document.querySelectorAll(".tap-note").forEach(note => note.textContent = "לחץ לחשיפה");
+    function toggleRevealAllAnswers() {
+      allAnswersVisible = !allAnswersVisible;
+      applyRevealStateToCurrentCard();
     }
 
     document.getElementById("learnBtn").addEventListener("click", () => showView("learn"));
@@ -1081,10 +1161,11 @@
     document.getElementById("manageBtn").addEventListener("click", () => showView("manage"));
 
     document.getElementById("randomBtn").addEventListener("click", () => loadRandomCard(true));
+    document.getElementById("manualPickBtn").addEventListener("click", toggleManualPicker);
+    document.getElementById("cardSelect").addEventListener("change", event => loadSpecificCard(event.target.value));
     document.getElementById("modeEnToHeBtn").addEventListener("click", () => setLearningMode("en-to-he"));
     document.getElementById("modeHeToEnBtn").addEventListener("click", () => setLearningMode("he-to-en"));
-    document.getElementById("revealAllBtn").addEventListener("click", revealAllAnswers);
-    document.getElementById("hideAllBtn").addEventListener("click", hideAllAnswers);
+    document.getElementById("toggleRevealAllBtn").addEventListener("click", toggleRevealAllAnswers);
 
     document.getElementById("addCreateRowBtn").addEventListener("click", addCreateRow);
     document.getElementById("saveBtn").addEventListener("click", saveCard);
@@ -1098,6 +1179,7 @@
     buildCreateInputs();
     updateModeUi();
     loadRandomCard();
+    updateRevealToggleButton();
   </script>
 </body>
 </html>
