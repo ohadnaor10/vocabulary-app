@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>כרטיסיות אוצר מילים</title>
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #1f2937;
+      --border: #e5e7eb;
+      --green: #0f766e;
+      --red: #b91c1c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+      padding-bottom: 96px;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 22px 18px;
+      border-radius: 0 0 24px 24px;
+      margin: 0 -16px 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 25px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: #d1d5db;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    button.green {
+      background: var(--green);
+    }
+
+    button.red {
+      background: var(--red);
+    }
+
+    .word-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .word-item {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .english {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--primary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .hebrew {
+      display: none;
+      margin-top: 8px;
+      font-size: 18px;
+      color: var(--green);
+      direction: rtl;
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .hebrew.visible {
+      display: block;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+    }
+
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 560px) {
+      .pair { grid-template-columns: 1fr; }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .hint, .small {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .status {
+      margin-top: 10px;
+      min-height: 24px;
+      font-weight: 700;
+    }
+
+    .saved-card {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .saved-card-title {
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255,255,255,0.98);
+      border-top: 1px solid var(--border);
+      padding: 10px;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .bottom-nav button {
+      flex: 1;
+      max-width: 230px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 18px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>כרטיסיות אוצר מילים</h1>
+      <p class="subtitle">יוצרים כרטיסיות עם 10 מילים. לוחצים על מילה באנגלית כדי לחשוף פירוש בעברית.</p>
+    </header>
+
+    <section id="learnView" class="panel">
+      <div class="top-row">
+        <div>
+          <div id="currentTitle" style="font-weight:800">כרטיסייה</div>
+          <div id="cardCounter" class="small"></div>
+        </div>
+        <button id="randomBtn">כרטיסייה אחרת</button>
+      </div>
+
+      <p class="hint">לחיצה על מילה באנגלית תציג או תסתיר את הפירוש.</p>
+      <div id="wordList" class="word-list"></div>
+    </section>
+
+    <section id="createView" class="panel hidden">
+      <h2 style="margin-top:0">יצירת כרטיסייה</h2>
+      <input id="cardTitle" placeholder="שם הכרטיסייה, לדוגמה: Day 1">
+      <div style="height:12px"></div>
+      <div id="inputs"></div>
+      <button id="saveBtn" class="green">שמור כרטיסייה</button>
+      <div id="saveStatus" class="status"></div>
+    </section>
+
+    <section id="manageView" class="panel hidden">
+      <div class="top-row">
+        <h2 style="margin:0">ניהול כרטיסיות</h2>
+        <button id="deleteAllBtn" class="red">מחק הכל</button>
+      </div>
+      <div id="cardsList"></div>
+    </section>
+  </div>
+
+  <div class="bottom-nav">
+    <button id="learnBtn">לימוד</button>
+    <button id="createBtn" class="secondary">יצירה</button>
+    <button id="manageBtn" class="secondary">ניהול</button>
+  </div>
+
+  <script>
+    (function () {
+      var STORAGE_KEY = "vocabulary_cards_fixed_v2";
+
+      function makeId() {
+        return "id_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      var starterCards = [
+        {
+          id: makeId(),
+          title: "כרטיסייה לדוגמה",
+          words: [
+            { english: "Persuade", hebrew: "לשכנע" },
+            { english: "Contribute", hebrew: "לתרום" },
+            { english: "Anticipate", hebrew: "לצפות מראש" },
+            { english: "Facilitate", hebrew: "להקל / לאפשר" },
+            { english: "Deduce", hebrew: "להסיק" },
+            { english: "Initiate", hebrew: "ליזום" },
+            { english: "Reliable", hebrew: "אמין" },
+            { english: "Approach", hebrew: "גישה / לגשת" },
+            { english: "Improve", hebrew: "לשפר" },
+            { english: "Evidence", hebrew: "ראיה / הוכחה" }
+          ]
+        }
+      ];
+
+      function getCards() {
+        var raw = localStorage.getItem(STORAGE_KEY);
+
+        if (!raw) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(starterCards));
+          return starterCards.slice();
+        }
+
+        try {
+          var parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed;
+          return starterCards.slice();
+        } catch (e) {
+          return starterCards.slice();
+        }
+      }
+
+      function setCards(cards) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+      }
+
+      function buildInputs() {
+        var container = document.getElementById("inputs");
+        container.innerHTML = "";
+
+        for (var i = 1; i <= 10; i++) {
+          var pair = document.createElement("div");
+          pair.className = "pair";
+          pair.innerHTML =
+            '<input id="en' + i + '" dir="ltr" placeholder="מילה ' + i + ' באנגלית">' +
+            '<input id="he' + i + '" dir="rtl" placeholder="פירוש בעברית">';
+          container.appendChild(pair);
+        }
+      }
+
+      function showView(viewName) {
+        document.getElementById("learnView").classList.toggle("hidden", viewName !== "learn");
+        document.getElementById("createView").classList.toggle("hidden", viewName !== "create");
+        document.getElementById("manageView").classList.toggle("hidden", viewName !== "manage");
+
+        document.getElementById("learnBtn").className = viewName === "learn" ? "" : "secondary";
+        document.getElementById("createBtn").className = viewName === "create" ? "" : "secondary";
+        document.getElementById("manageBtn").className = viewName === "manage" ? "" : "secondary";
+
+        if (viewName === "learn") loadRandomCard();
+        if (viewName === "manage") renderCardsList();
+      }
+
+      function loadRandomCard() {
+        var cards = getCards();
+        var wordList = document.getElementById("wordList");
+        var currentTitle = document.getElementById("currentTitle");
+        var cardCounter = document.getElementById("cardCounter");
+
+        if (cards.length === 0) {
+          currentTitle.textContent = "אין עדיין כרטיסיות";
+          cardCounter.textContent = "";
+          wordList.innerHTML = '<div class="empty">עבור למסך יצירה והוסף כרטיסייה ראשונה.</div>';
+          return;
+        }
+
+        var card = cards[Math.floor(Math.random() * cards.length)];
+
+        currentTitle.textContent = card.title || "כרטיסייה ללא שם";
+        cardCounter.textContent = card.words.length + " מילים";
+
+        wordList.innerHTML = "";
+
+        card.words.forEach(function (word, index) {
+          var item = document.createElement("div");
+          item.className = "word-item";
+
+          var english = document.createElement("div");
+          english.className = "english";
+          english.textContent = (index + 1) + ". " + word.english;
+
+          var hebrew = document.createElement("div");
+          hebrew.className = "hebrew";
+          hebrew.textContent = word.hebrew;
+
+          english.addEventListener("click", function () {
+            hebrew.classList.toggle("visible");
+          });
+
+          item.appendChild(english);
+          item.appendChild(hebrew);
+          wordList.appendChild(item);
+        });
+      }
+
+      function saveCard() {
+        var title = document.getElementById("cardTitle").value.trim() || "כרטיסייה חדשה";
+        var words = [];
+        var status = document.getElementById("saveStatus");
+
+        for (var i = 1; i <= 10; i++) {
+          var english = document.getElementById("en" + i).value.trim();
+          var hebrew = document.getElementById("he" + i).value.trim();
+
+          if (!english || !hebrew) {
+            status.textContent = "חסרה מילה או פירוש בשורה " + i + ".";
+            status.style.color = "var(--red)";
+            return;
+          }
+
+          words.push({ english: english, hebrew: hebrew });
+        }
+
+        var cards = getCards();
+        cards.push({
+          id: makeId(),
+          title: title,
+          words: words
+        });
+
+        setCards(cards);
+
+        document.getElementById("cardTitle").value = "";
+        buildInputs();
+
+        status.textContent = "הכרטיסייה נשמרה.";
+        status.style.color = "var(--green)";
+
+        loadRandomCard();
+        renderCardsList();
+      }
+
+      function renderCardsList() {
+        var cards = getCards();
+        var list = document.getElementById("cardsList");
+        list.innerHTML = "";
+
+        if (cards.length === 0) {
+          list.innerHTML = '<div class="empty">אין כרטיסיות שמורות.</div>';
+          return;
+        }
+
+        cards.forEach(function (card) {
+          var div = document.createElement("div");
+          div.className = "saved-card";
+
+          var title = document.createElement("div");
+          title.className = "saved-card-title";
+          title.textContent = card.title || "כרטיסייה ללא שם";
+
+          var count = document.createElement("div");
+          count.className = "small";
+          count.textContent = card.words.length + " מילים";
+
+          var deleteBtn = document.createElement("button");
+          deleteBtn.className = "red";
+          deleteBtn.style.marginTop = "10px";
+          deleteBtn.textContent = "מחק";
+          deleteBtn.addEventListener("click", function () {
+            deleteCard(card.id);
+          });
+
+          div.appendChild(title);
+          div.appendChild(count);
+          div.appendChild(deleteBtn);
+
+          list.appendChild(div);
+        });
+      }
+
+      function deleteCard(id) {
+        var cards = getCards().filter(function (card) {
+          return card.id !== id;
+        });
+
+        setCards(cards);
+        renderCardsList();
+        loadRandomCard();
+      }
+
+      function deleteAllCards() {
+        if (!confirm("למחוק את כל הכרטיסיות?")) return;
+        setCards([]);
+        renderCardsList();
+        loadRandomCard();
+      }
+
+      document.getElementById("learnBtn").addEventListener("click", function () { showView("learn"); });
+      document.getElementById("createBtn").addEventListener("click", function () { showView("create"); });
+      document.getElementById("manageBtn").addEventListener("click", function () { showView("manage"); });
+      document.getElementById("randomBtn").addEventListener("click", loadRandomCard);
+      document.getElementById("saveBtn").addEventListener("click", saveCard);
+      document.getElementById("deleteAllBtn").addEventListener("click", deleteAllCards);
+
+      buildInputs();
+      loadRandomCard();
+    })();
+  </script>
+</body>
+</html>
