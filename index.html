@@ -213,14 +213,31 @@
       box-shadow: var(--shadow);
     }
 
-    .manual-card-picker select {
+    .manual-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .manual-card-option {
       width: 100%;
-      padding: 12px;
-      border: 1px solid var(--border);
+      min-height: 42px;
+      padding: 10px 12px;
       border-radius: 12px;
       background: white;
       color: var(--text);
-      font-size: 15px;
+      border: 1px solid var(--border);
+      text-align: right;
+      box-shadow: none;
+      font-weight: 700;
+    }
+
+    .manual-card-option.active {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      border-color: #c7d2fe;
     }
 
     .word-list {
@@ -583,7 +600,7 @@
           </button>
 
           <div id="manualCardPicker" class="manual-card-picker hidden">
-            <select id="cardSelect"></select>
+            <div id="manualCardList" class="manual-card-list"></div>
           </div>
         </div>
       </div>
@@ -994,17 +1011,24 @@
     }
 
     function populateCardSelect() {
-      const select = document.getElementById("cardSelect");
+      const list = document.getElementById("manualCardList");
       const cards = getCards();
 
-      select.innerHTML = "";
+      list.innerHTML = "";
 
       cards.forEach(card => {
-        const option = document.createElement("option");
-        option.value = card.id;
-        option.textContent = card.title;
-        option.selected = card.id === currentCardId;
-        select.appendChild(option);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "manual-card-option";
+        button.textContent = card.title;
+
+        if (card.id === currentCardId) {
+          button.classList.add("active");
+        }
+
+        button.addEventListener("click", () => loadSpecificCard(card.id));
+
+        list.appendChild(button);
       });
     }
 
@@ -1027,9 +1051,9 @@
     }
 
     function getSurpriseStep(stage) {
-      if (stage <= 0) return 3;
-      if (stage === 1) return 3;
-      return 6;
+      if (stage <= 0) return 20;
+      if (stage === 1) return 40;
+      return 80;
     }
 
     function registerCardOpening() {
@@ -1345,7 +1369,6 @@
 
     document.getElementById("randomBtn").addEventListener("click", () => loadRandomCard(true, true));
     document.getElementById("manualPickBtn").addEventListener("click", toggleManualPicker);
-    document.getElementById("cardSelect").addEventListener("change", event => loadSpecificCard(event.target.value));
     document.getElementById("modeEnToHeBtn").addEventListener("click", () => setLearningMode("en-to-he"));
     document.getElementById("modeHeToEnBtn").addEventListener("click", () => setLearningMode("he-to-en"));
     document.getElementById("toggleRevealAllBtn").addEventListener("click", toggleRevealAllAnswers);
