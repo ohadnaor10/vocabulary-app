@@ -1027,8 +1027,9 @@
     }
 
     function getSurpriseStep(stage) {
-      if (stage <= 0) return 10;
-      return 30;
+      if (stage <= 0) return 20;
+      if (stage === 1) return 40;
+      return 80;
     }
 
     function registerCardOpening() {
@@ -1056,6 +1057,17 @@
 
     function closeSurpriseMessage() {
       document.getElementById("surpriseOverlay").classList.add("hidden");
+    }
+
+    function shuffledWords(words) {
+      const copy = [...words];
+
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+
+      return copy;
     }
 
     function loadRandomCard(chooseNew = true, countOpening = false) {
@@ -1100,7 +1112,7 @@
 
       const mode = getLearningMode();
 
-      card.words.forEach((word, index) => {
+      shuffledWords(card.words).forEach((word, index) => {
         const item = document.createElement("div");
         item.className = "word-item";
 
