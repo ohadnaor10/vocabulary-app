@@ -928,18 +928,7 @@
     }
 
     function ensureStarterCardsExist() {
-      const cards = getCards();
-      let changed = false;
-
-      starterCards.forEach(sampleCard => {
-        const exists = cards.some(card => card.id === sampleCard.id);
-        if (!exists) {
-          cards.push(sampleCard);
-          changed = true;
-        }
-      });
-
-      if (changed) setCards(cards);
+      // No demo cards in the GitHub ZIP version.
     }
 
     function getLearningMode() {
