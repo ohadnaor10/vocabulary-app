@@ -894,6 +894,43 @@
 
     const starterCards = [];
 
+    function removeOldDemoCardsFromStorage() {
+      const demoIds = new Set([
+        "sample_chatgpt_1",
+        "sample_chatgpt_2",
+        "sample_chatgpt_3",
+        "sample_chatgpt_4"
+      ]);
+
+      const demoTitles = new Set([
+        "דוגמא צ׳אט ג׳יפיטי 1",
+        "דוגמא צ׳אט ג׳יפיטי 2",
+        "דוגמא צ׳אט ג׳יפיטי 3",
+        "דוגמא צ׳אט ג׳יפיטי 4"
+      ]);
+
+      const raw = localStorage.getItem(STORAGE_KEY);
+
+      if (!raw) return;
+
+      try {
+        const cards = JSON.parse(raw);
+
+        if (!Array.isArray(cards)) return;
+
+        const filteredCards = cards.filter(card => {
+          return !demoIds.has(card.id) && !demoTitles.has(card.title);
+        });
+
+        if (filteredCards.length !== cards.length) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredCards));
+        }
+      } catch {
+        return;
+      }
+    }
+
+
     function makeId() {
       return "id_" + Date.now() + "_" + Math.floor(Math.random() * 1000000);
     }
@@ -928,7 +965,7 @@
     }
 
     function ensureStarterCardsExist() {
-      // No demo cards in the GitHub ZIP version.
+      // No demo cards in this version.
     }
 
     function getLearningMode() {
@@ -1657,6 +1694,7 @@
     document.getElementById("saveEditBtn").addEventListener("click", saveEditedCard);
     document.getElementById("surpriseCloseBtn").addEventListener("click", closeSurpriseMessage);
 
+    removeOldDemoCardsFromStorage();
     ensureStarterCardsExist();
     buildCreateInputs();
     updateModeUi();
